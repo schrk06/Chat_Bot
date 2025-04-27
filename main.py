@@ -1,5 +1,6 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+from auth import create_access_token, authenticate_user, verify_token, oauth2_scheme, fake_user_db
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -19,15 +20,40 @@ app = FastAPI()
 # Crée une pipeline pour la génération de texte
 generator = pipeline('text-generation', model='distilgpt2')
 
+class User(BaseModel):
+    username: str
+    password: str
+
 class ChatRequest(BaseModel):
     prompt: str
+
+
+
+# Route pour s'inscrire (simulé ici)
+@app.post("/register")
+def register(user: User):
+    if user.username in fake_user_db:
+        raise HTTPException(status_code=400, detail="Utilisateur déjà existant.")
+    fake_user_db[user.username] = {"username": user.username, "password": user.password}
+    return {"message": "Inscription réussie."}
+
+#Connexion 
+@app.post("/login")
+def login(user: User):
+    authenticated_user = authenticate_user(user.username, user.password)
+    if not authenticated_user:
+        raise HTTPException(status_code=401, detail="Identifiants invalides")
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
 
 @app.get("/")
 async def root():
     return {"message": "Bienvenue sur mon chatbot API 🚀"}
 
 @app.post("/chat")
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, token: str = Depends(oauth2_scheme)):
+    username = verify_token(token)  
     # Utilise le modèle Hugging Face pour générer une réponse
     prompt = request.prompt
     response = generator(prompt, max_length=50, num_return_sequences=1)
