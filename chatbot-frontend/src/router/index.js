@@ -1,15 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../components/LoginPage.vue'
-import Chat from '../components/ChatComponent.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Login from '../components/LoginPage.vue';
+import Chat from '../components/ChatComponent.vue';
 
 const routes = [
-  { path: '/', component: Login },
-  { path: '/chat', component: Chat },
-]
+  {
+    path: '/',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: Chat
+  }
+];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
-})
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+});
 
-export default router
+export default router;
