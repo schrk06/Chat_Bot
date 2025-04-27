@@ -53,7 +53,7 @@ async def root():
 
 @app.post("/chat")
 async def chat(request: ChatRequest, token: str = Depends(oauth2_scheme)):
-    username = verify_token(token)  
+    verify_token(token)  
     # Utilise le modèle Hugging Face pour générer une réponse
     prompt = request.prompt
     response = generator(prompt, max_length=50, num_return_sequences=1)
