@@ -1,7 +1,10 @@
 fastapi
 uvicorn
+python-jose
+pydantic
 python-dotenv
 openai
-requests
-python-jose
 transformers
+torch
+pytest
+httpx
