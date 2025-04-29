@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
-api_key = os.environ.get("OPENAI_API_KEY")
+api_key = os.environ.get("OPENAI_API_KEY")  #Ne sert un peu à rien pour l'instant car j'ai utilisé finalement hugginface comme provider.
 client = OpenAI(api_key=api_key)
 
 app = FastAPI()
