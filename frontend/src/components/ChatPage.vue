@@ -44,7 +44,7 @@
     try {
       const response = await api.post('/chat', { 
         prompt: userPrompt,
-        provider: "huggingface" // ou "openai" si tu veux
+        provider: "huggingface" 
       })
   
       messages.value.push({ sender: "Bot", text: response.data.response })
